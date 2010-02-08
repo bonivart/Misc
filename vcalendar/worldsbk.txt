@@ -1,0 +1,14 @@
+20090301||WSBK, Phillip Island|
+20090314||WSBK, Losail|
+20090405||WSBK, Valencia|
+20090426||WSBK, Assen|
+20090510||WSBK, Monza|
+20090517||WSBK, Kyalami|
+20090531||WSBK, Salt Lake City|
+20090621||WSBK, Misano|
+20090628||WSBK, Donington Park|
+20090726||WSBK, Brno|
+20090906||WSBK, Nurburgring|
+20090927||WSBK, Imola|
+20091004||WSBK, Magny Cours|
+20091025||WSBK, Portimao|

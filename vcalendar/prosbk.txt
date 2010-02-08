@@ -1,0 +1,8 @@
+20090502||ProSBK, Mantorp|
+20090523||ProSBK, Karlskoga|
+20090627||ProSBK, Knutstorp|
+20090711||ProSBK, Falkenberg|
+20090815||ProSBK, Karlskoga|
+20090829||ProSBK, Valer|
+20090912||ProSBK, Knutstorp|
+20090926||ProSBK, Mantorp|

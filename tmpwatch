@@ -1,0 +1,103 @@
+#!/usr/bin/env perl
+
+# tmpwatch - perl implementation of tmpwatch
+# Copyright (C) 2010 Peter Bonivart
+
+use strict;
+use warnings;
+use Getopt::Long;
+Getopt::Long::Configure qw(no_ignore_case bundling);
+
+my $version = "0.2";
+my ($help,$useatime,$usemtime,$usectime,$all,$nodirs,$force,
+    $test,$fuser,$verbose,$showver,$hours);
+
+GetOptions("h|help"	=> \$help,
+           "u|atime"	=> \$useatime,
+           "m|mtime"	=> \$usemtime,
+           "c|ctime"	=> \$usectime,
+           "a|all"	=> \$all,
+           "d|nodirs"	=> \$nodirs,
+           "f|force"	=> \$force,
+           "t|test"	=> \$test,
+           "s|fuser"	=> \$fuser,
+           "v|verbose"	=> \$verbose,
+           "V|version"	=> \$showver) || usage();
+
+if ($showver) {
+  print "$version\n";
+  exit 0;
+}
+
+usage() if ($help || scalar(@ARGV) < 2);
+
+# Usage info
+sub usage {
+  print "tmpwatch $version, removes files which haven't been accessed for a period of time.\n\n";
+  print "Usage: tmpwatch [options] <hours> <dir>...\n";
+  print "\n  -u, --atime\tUse access time (default)";
+  print "\n  -m, --mtime\tUse modification time";
+  print "\n  -c, --ctime\tUse creation time";
+#  print "\n  -a, --all\tRemove all file types, not just regular";
+  print "\n  -d, --nodirs\tDo not remove directories, even if they are empty";
+#  print "\n  -f, --force\tRemove files even if root doesn't have write access\n\t\t(similar to rm -f)";
+  print "\n  -t, --test\tDo not remove files, just simulate. Implies -v";
+#  print "\n  -s, --fuser\tAttempt to use fuser command to see if a file is open";
+  print "\n  -v, --verbose\tVerbose display";
+  print "\n  -V, --version\tShow version";
+  print "\n\nWritten and maintained by Peter Bonivart.\n";
+  exit 0;
+}
+
+# Check for valid integers
+$hours = shift @ARGV;
+if ($hours !~ /^\d+$/) {
+  print STDERR "Only positive integers are allowed.\n";
+  exit 1;
+}
+
+$useatime = 1 unless ($usemtime || $usectime); # atime is default
+
+my $now = time();
+my @dirs = @ARGV;
+
+# Main
+foreach my $dir (@dirs) {
+  next unless (-d $dir);
+  foreach my $file (glob "$dir/*") {
+    # stat file and calculate age
+    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat($file);
+    my $time;
+    $time = $mtime if $usemtime;
+    $time = $ctime if $usectime;
+    $time = $atime if $useatime; # atime wins (default) if combo used
+    my $diff = ($now - $time) / 3600;
+
+    # add dirs to list
+    push(@dirs,$file) if (-d $file);
+
+    # remove dirs if empty and nodirs not set
+    if (-d _ && ! $nodirs && ! $test && $diff > $hours) {
+      my $hit = 0;
+      foreach (@ARGV) {
+        $hit = 1 if ($_ eq $file)
+      }
+      my $rc = rmdir $file unless $hit; # do not remove if dir in argument list
+      print "$file (empty dir)\n" if ($rc && $verbose);
+    }
+
+    # skip if not a regular file
+    next unless (-f _);
+
+    if ($diff > $hours) {
+      if ($test) {
+        print "$file\t(test mode)\n";
+      } else {
+        print "$file\n" if $verbose;
+        unlink $file; 
+      }
+    }
+  }
+}
+
+exit 0;

@@ -1,0 +1,18 @@
+20090412||MotoGP, Losail|
+20090426||MotoGP, Motegi|
+20090503||MotoGP, Jerez|
+20090517||MotoGP, Le Mans|
+20090531||MotoGP, Mugello|
+20090614||MotoGP, Catalunya|
+20090627||MotoGP, Assen|
+20090705||MotoGP, Laguna Seca|
+20090719||MotoGP, Sachsenring|
+20090726||MotoGP, Donington Park|
+20090816||MotoGP, Brno|
+20090830||MotoGP, Indianapolis|
+20090906||MotoGP, Misano|
+20090920||MotoGP, Balatonring|
+20091004||MotoGP, Estoril|
+20091018||MotoGP, Phillip Island|
+20091025||MotoGP, Sepang|
+20091108||MotoGP, Valencia|
